@@ -7,6 +7,7 @@ import React from "react";
 // Some components don't know their children ahead of time. This is especially common for components like Sidebar or Dialog that represent generic boxes
 // We recommand that such components use the special children prop to pass children elements directly into their output
 // Basically, it is used to display whatever you include between the opening and the closing tags when invoking a component
+// The children here is the optional banner
 export default function Hero({ children, hero }) {
   return <header className={hero}>{children}</header>;
 }

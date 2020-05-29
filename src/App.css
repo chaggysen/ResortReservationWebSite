@@ -162,6 +162,7 @@ h6 {
   /* 100vh - height of the navBar */
   min-height: calc(100vh - 66px);
   background: url("./images/defaultBcg.jpeg") center/cover no-repeat;
+  /* Flex box: If there will be children, it will be placed in the center */
   display: flex;
   align-items: center;
   justify-content: center;
