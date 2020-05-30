@@ -3,6 +3,7 @@ import Hero from "../components/Hero";
 import Banner from "../components/Banner";
 import { Link } from "react-router-dom";
 import Services from "../components/Services";
+import FeaturedRooms from "../components/FeaturedRooms";
 
 export default function Home() {
   // Here we call the hero component with defaultHero as hero props. That hero props will serve
@@ -26,6 +27,7 @@ export default function Home() {
       </Hero>
       {/* The services component does not have any props */}
       <Services />
+      <FeaturedRooms />
     </>
   );
 }
