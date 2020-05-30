@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { RoomContext } from "../context";
+import Loading from "./Loading";
 
 export default class FeaturedRooms extends Component {
   // The contextType property on a class can be assigned a Context object created by React.createContext().
@@ -9,6 +10,10 @@ export default class FeaturedRooms extends Component {
     //   The destructuring assignment syntax is a JavaScript expression that makes it possible to unpack values from arrays, or properties from objects, into distinct variables
     // Here, we are accessing the values from featuredRooms props and we rename it rooms from this.context(RoomContext)
     const { featuredRooms: rooms } = this.context;
-    return <div></div>;
+    return (
+      <div>
+        <Loading />
+      </div>
+    );
   }
 }
