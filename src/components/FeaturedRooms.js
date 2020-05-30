@@ -7,11 +7,8 @@ export default class FeaturedRooms extends Component {
   static contextType = RoomContext;
   render() {
     //   The destructuring assignment syntax is a JavaScript expression that makes it possible to unpack values from arrays, or properties from objects, into distinct variables
-    const { name, greeting } = this.context;
-    return (
-      <div>
-        {greeting}hello {name}from featured rooms
-      </div>
-    );
+    // Here, we are accessing the values from featuredRooms props and we rename it rooms from this.context(RoomContext)
+    const { featuredRooms: rooms } = this.context;
+    return <div></div>;
   }
 }
