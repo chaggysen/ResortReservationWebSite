@@ -49,6 +49,14 @@ class RoomProvider extends Component {
     return tempItems;
   }
 
+  getRoom = (slug) => {
+    // We copy the rooms
+    let tempRooms = [...this.state.rooms];
+    // Iterate the rooms array and find the room that have the corresponding slug
+    const room = tempRooms.find((room) => room.slug === slug);
+    return room;
+  };
+
   // Now we have to provide the datas to the different components. When we create a context, we also have to create a provider which is a tag that surrounds which ever components that want to use that context.
   // So inside the return, we need to return the RoomContext Provider tag which is provided by the context API itself.
   // So everytime we create a context object, we are also creating a context.Provider
@@ -56,7 +64,8 @@ class RoomProvider extends Component {
   // Accepts a value prop to be passed to consuming components that are descendants of this Provider. One Provider can be connected to many consumers. Providers can be nested to override values deeper within the tree
   render() {
     return (
-      <RoomContext.Provider value={{ ...this.state }}>
+      // Here we make the getRoom function available within the context
+      <RoomContext.Provider value={{ ...this.state, getRoom: this.getRoom }}>
         {this.props.children}
       </RoomContext.Provider>
     );
