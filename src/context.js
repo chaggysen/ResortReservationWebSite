@@ -75,4 +75,19 @@ class RoomProvider extends Component {
 // A react component that subscribes to context changes. This lets you subscribe to a context within a function component
 const RoomConsumer = RoomContext.Consumer;
 
+// A higher-order component is an advanced technique in React for reusing component logic.
+// Concretly, a HOC is a function that takes a component and returns a new component
+// Whereas a component transforms props into UI, a higher order component transforms a component into another component
+// Here it takes the component and displays it with the props that are needed. It also adds a context prop to that component which includes the data that are passed from the context
+
+export function withRoomConsumer(Component) {
+  return function ConsumerWrapper(props) {
+    return (
+      <RoomConsumer>
+        {(value) => <Component {...props} context={value} />}
+      </RoomConsumer>
+    );
+  };
+}
+
 export { RoomProvider, RoomConsumer, RoomContext };
