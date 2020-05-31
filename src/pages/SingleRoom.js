@@ -4,6 +4,7 @@ import Hero from "../components/Hero";
 import Banner from "../components/Banner";
 import { Link } from "react-router-dom";
 import { RoomContext } from "../context";
+import StyledHero from "../components/StyledHero";
 
 export default class SingleRoom extends Component {
   // We need to get the slug parameter that has been passed
@@ -49,13 +50,14 @@ export default class SingleRoom extends Component {
       images,
     } = room;
     return (
-      <Hero hero="roomsHero">
+      // Here we pass the image to styledHero component to dynamically change the hero background image
+      <StyledHero img={images[0] || this.state.defaultBcg}>
         <Banner title={`${name} room`}>
           <Link to="/rooms" className="btn-primary">
             Back to rooms
           </Link>
         </Banner>
-      </Hero>
+      </StyledHero>
     );
   }
 }
