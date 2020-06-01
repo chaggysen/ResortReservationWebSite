@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import items from "./data";
+// import items from "./data";
+import Client from "./Contentful";
 
 // Context provides a way to pass data through the component tree without having to pass props down manually at evey level
 // In a typical React application, data is passed top-dowm (parent to child) via props, but this can be cumbersome for certain types of props
@@ -32,24 +33,48 @@ class RoomProvider extends Component {
     breakfast: false,
     pets: false,
   };
+  // getData
+  getData = async () => {
+    try {
+      let response = await Client.getEntries({
+        content_type: "beachResortRoom",
+        order: "sys.createdAt",
+      });
+      let rooms = this.formatData(response.items);
+      let featuredRooms = rooms.filter((room) => room.featured === true);
+      let maxPrice = Math.max(...rooms.map((item) => item.price));
+      let maxSize = Math.max(...rooms.map((item) => item.size));
+      // When we first mount our application, we set the sortedRooms to all the rooms first
+      this.setState({
+        rooms,
+        featuredRooms,
+        sortedRooms: rooms,
+        loading: false,
+        maxPrice: maxPrice,
+        maxSize: maxSize,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   // componentDidMount() is invoked immediately after a component is mounted (inserted into the tree). Initialization that requires DOM nodes should go here.
   // If you need to load data from a remote endpoint, this is a good place to instantiate the network request
   componentDidMount() {
-    // this.getData
-    let rooms = this.formatData(items);
-    let featuredRooms = rooms.filter((room) => room.featured === true);
-    let maxPrice = Math.max(...rooms.map((item) => item.price));
-    let maxSize = Math.max(...rooms.map((item) => item.size));
-    // When we first mount our application, we set the sortedRooms to all the rooms first
-    this.setState({
-      rooms,
-      featuredRooms,
-      sortedRooms: rooms,
-      loading: false,
-      maxPrice: maxPrice,
-      maxSize: maxSize,
-    });
+    this.getData();
+    // let rooms = this.formatData(items);
+    // let featuredRooms = rooms.filter((room) => room.featured === true);
+    // let maxPrice = Math.max(...rooms.map((item) => item.price));
+    // let maxSize = Math.max(...rooms.map((item) => item.size));
+    // // When we first mount our application, we set the sortedRooms to all the rooms first
+    // this.setState({
+    //   rooms,
+    //   featuredRooms,
+    //   sortedRooms: rooms,
+    //   loading: false,
+    //   maxPrice: maxPrice,
+    //   maxSize: maxSize,
+    // });
   }
 
   formatData(items) {
