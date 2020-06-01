@@ -11,6 +11,7 @@ function RoomContainer({ context }) {
   }
   return (
     <>
+      {/* Here the RoomList uses the sortedRoom props to display the rooms we want */}
       <RoomsFilter rooms={rooms} />
       <RoomsList rooms={sortedRooms} />
     </>

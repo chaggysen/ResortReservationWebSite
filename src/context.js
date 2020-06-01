@@ -17,11 +17,20 @@ class RoomProvider extends Component {
   state = {
     // The rooms property will store all the infos about our room
     rooms: [],
-    // The sortedRooms property will be used when we want to sort the rooms by price
+    // The sortedRooms property will be used when we want to sort the rooms
     sortedRooms: [],
     featuredRooms: [],
     // The loading property will be used when be fetch data from Contentful DMS
     loading: true,
+    type: "all",
+    capacity: 1,
+    price: 0,
+    minPrice: 0,
+    maxPrice: 0,
+    minSize: 0,
+    maxSize: 0,
+    breakfast: false,
+    pets: false,
   };
 
   // componentDidMount() is invoked immediately after a component is mounted (inserted into the tree). Initialization that requires DOM nodes should go here.
@@ -30,11 +39,16 @@ class RoomProvider extends Component {
     // this.getData
     let rooms = this.formatData(items);
     let featuredRooms = rooms.filter((room) => room.featured === true);
+    let maxPrice = Math.max(...rooms.map((item) => item.price));
+    let maxSize = Math.max(...rooms.map((item) => item.size));
+    // When we first mount our application, we set the sortedRooms to all the rooms first
     this.setState({
       rooms,
       featuredRooms,
       sortedRooms: rooms,
       loading: false,
+      maxPrice: maxPrice,
+      maxSize: maxSize,
     });
   }
 
@@ -56,6 +70,68 @@ class RoomProvider extends Component {
     const room = tempRooms.find((room) => room.slug === slug);
     return room;
   };
+  // This function will grab everything that control input will give us, and we will fix the values of the properties in the state.
+  // Handle change will change the values in the state
+  handleChange = (event) => {
+    const target = event.target;
+    const value = event.type === "checkbox" ? target.checked : target.value;
+    const name = event.target.name;
+
+    // After changing the state, we need to filter room to display the corresponding rooms
+    this.setState(
+      {
+        [name]: value,
+      },
+      this.filterRoom
+    );
+  };
+
+  // This function will not have argument. It will grab the values from the state and filter room
+  filterRoom = () => {
+    // We destructure the state to get the variables we need
+    let {
+      rooms,
+      type,
+      capacity,
+      price,
+      minSize,
+      maxSize,
+      breakfast,
+      pets,
+    } = this.state;
+    // all the rooms
+    let tempRooms = [...rooms];
+
+    // transform values
+    capacity = parseInt(capacity);
+    price = parseInt(price);
+
+    // if the type is not all, we filter tempRoom with only the type of room we want
+    if (type !== "all") {
+      tempRooms = tempRooms.filter((room) => room.type === type);
+    }
+    // filter by capacity
+    if (capacity !== 1) {
+      tempRooms = tempRooms.filter((room) => room.capacity >= capacity);
+    }
+    // filter by price
+    tempRooms = tempRooms.filter((room) => room.price <= price);
+    // filter by size
+    tempRooms = tempRooms.filter(
+      (room) => room.size >= minSize && room.size <= maxSize
+    );
+    if (breakfast) {
+      tempRooms = tempRooms.filter((room) => room.breakfast === true);
+    }
+    if (pets) {
+      tempRooms = tempRooms.filter((room) => room.pets === true);
+    }
+
+    // Here we set the sortedRoom to the rooms we want to display
+    this.setState({
+      sortedRooms: tempRooms,
+    });
+  };
 
   // Now we have to provide the datas to the different components. When we create a context, we also have to create a provider which is a tag that surrounds which ever components that want to use that context.
   // So inside the return, we need to return the RoomContext Provider tag which is provided by the context API itself.
@@ -65,7 +141,14 @@ class RoomProvider extends Component {
   render() {
     return (
       // Here we make the getRoom function available within the context
-      <RoomContext.Provider value={{ ...this.state, getRoom: this.getRoom }}>
+      // Here we make the handleChange function available within the context
+      <RoomContext.Provider
+        value={{
+          ...this.state,
+          getRoom: this.getRoom,
+          handleChange: this.handleChange,
+        }}
+      >
         {this.props.children}
       </RoomContext.Provider>
     );
